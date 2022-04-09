@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Col, Form, Row, Table } from "react-bootstrap";
 
-export const BadList = ({ badList }) => {
+export const BadList = ({ badList, removeFromBadList, shiftToTaskList }) => {
   // Responsive using bootstrap - md="6" here is the screen size
   return (
     <div>
@@ -18,10 +18,10 @@ export const BadList = ({ badList }) => {
               <td>{item.hr}</td>
               <td className="text-end">
                 {/*This td will have 2 buttons  */}
-                <Button variant="warning">
+                <Button variant="warning" onClick={() => shiftToTaskList(i)}>
                   <i className="fa-solid fa-arrow-left-long"></i>
                 </Button>
-                <Button variant="danger">
+                <Button variant="danger" onClick={() => removeFromBadList(i)}>
                   <i className="fa-solid fa-trash-can"></i>
                 </Button>{" "}
               </td>

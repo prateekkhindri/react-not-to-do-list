@@ -27,6 +27,15 @@ const App = () => {
     setTaskList(filteredArg);
   };
 
+  // 6. Removing the item from the Bad List
+
+  const removeFromBadList = (i) => {
+    const filteredArg = badList.filter((item, index) => {
+      return index !== i;
+    });
+    setBadList(filteredArg);
+  };
+
   // 5. Displaying the task on the bad list when the right arrow button is clicked
 
   const shiftToBadList = (i) => {
@@ -38,6 +47,14 @@ const App = () => {
 
     // 5.3 Remove the item from the task list
     removeFromTaskList(i);
+  };
+
+  // 7. Moving a task back to the task List from the Bad List
+
+  const shiftToTaskList = (i) => {
+    const item = badList[i];
+    setTaskList([...taskList, item]);
+    removeFromBadList(i);
   };
 
   return (
@@ -63,7 +80,11 @@ const App = () => {
             />
           </Col>
           <Col md="6">
-            <BadList badList={badList} />
+            <BadList
+              badList={badList}
+              removeFromBadList={removeFromBadList}
+              shiftToTaskList={shiftToTaskList}
+            />
           </Col>
         </Row>
 
