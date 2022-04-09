@@ -16,22 +16,34 @@ const App = () => {
   // 5.2 Add the item in the bad list, we create a state for the bad list
   const [badList, setBadList] = useState([]);
 
+  // 9. Alert when delete is clicked
+
+  const deleteTask = () => {
+    return window.confirm("Are you sure you want to delete this task?");
+  };
+
   // 4. Remove item from the task list when the delete button is clicked
 
   const removeFromTaskList = (i) => {
-    const filteredArg = taskList.filter((item, index) => {
-      return index !== i;
-    });
-    setTaskList(filteredArg);
+    // const shouldDelete = deleteTask();
+
+    if (deleteTask()) {
+      const filteredArg = taskList.filter((item, index) => {
+        return index !== i;
+      });
+      setTaskList(filteredArg);
+    }
   };
 
   // 6. Removing the item from the Bad List
 
   const removeFromBadList = (i) => {
-    const filteredArg = badList.filter((item, index) => {
-      return index !== i;
-    });
-    setBadList(filteredArg);
+    if (deleteTask()) {
+      const filteredArg = badList.filter((item, index) => {
+        return index !== i;
+      });
+      setBadList(filteredArg);
+    }
   };
 
   // 5. Displaying the task on the bad list when the right arrow button is clicked
