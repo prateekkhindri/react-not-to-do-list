@@ -7,16 +7,14 @@ import { TaskList } from "./components/task-list/TaskList";
 import { BadList } from "./components/task-list/BadList";
 import { Title } from "./components/title/Title";
 
+const weeklyHrs = 24 * 7;
+
 const App = () => {
   // 2. State to store all the task Lists values, we create a function addToTaskList
   const [taskList, setTaskList] = useState([]);
 
   // 5.2 Add the item in the bad list, we create a state for the bad list
   const [badList, setBadList] = useState([]);
-
-  const addToTaskList = (newInfo) => {
-    setTaskList([...taskList, newInfo]);
-  };
 
   // 4. Remove item from the task list when the delete button is clicked
 
@@ -57,6 +55,25 @@ const App = () => {
     removeFromBadList(i);
   };
 
+  // 8. Total from the Task and Bad List
+  // 8.1 Total calculation for the Task List
+  const taskListTotalHr = taskList.reduce((acc, item) => acc + +item.hr, 0);
+  // console.log(taskListTotalHr);   // Console shows the hrs concatenating as its a string so we add "+" to the item.hr
+
+  // 8.2 Total calculation for the Bad List
+  const badListTotalHr = badList.reduce((acc, item) => acc + +item.hr, 0);
+  // console.log(taskListTotalHr);   // Console shows the hrs concatenating as its a string so we add "+" to the item.hr
+
+  const ttlHrs = taskListTotalHr + badListTotalHr;
+
+  const addToTaskList = (newInfo) => {
+    if (ttlHrs + +newInfo.hr <= weeklyHrs) {
+      setTaskList([...taskList, newInfo]);
+    } else {
+      alert("You have exceeded the weekly limit of " + weeklyHrs + "hrs");
+    }
+  };
+
   return (
     <div className="wrapper">
       {/* We wrap all the components inside the container */}
@@ -77,6 +94,7 @@ const App = () => {
               taskList={taskList}
               removeFromTaskList={removeFromTaskList}
               shiftToBadList={shiftToBadList}
+              taskListTotalHr={taskListTotalHr}
             />
           </Col>
           <Col md="6">
@@ -84,6 +102,7 @@ const App = () => {
               badList={badList}
               removeFromBadList={removeFromBadList}
               shiftToTaskList={shiftToTaskList}
+              badListTotalHr={badListTotalHr}
             />
           </Col>
         </Row>
@@ -92,7 +111,7 @@ const App = () => {
 
         <Row>
           <Col>
-            <h3 className="mt-5">The total allocated hours is: 15hrs</h3>
+            <h3 className="mt-5">The total allocated hours is: {ttlHrs}</h3>
           </Col>
         </Row>
       </Container>

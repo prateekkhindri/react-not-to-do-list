@@ -1,7 +1,12 @@
 import React from "react";
 import { Button, Col, Form, NavItem, Row, Table } from "react-bootstrap";
 
-export const TaskList = ({ taskList, removeFromTaskList, shiftToBadList }) => {
+export const TaskList = ({
+  taskList,
+  removeFromTaskList,
+  shiftToBadList,
+  taskListTotalHr,
+}) => {
   // Responsive using bootstrap - md="6" here is the screen size
   return (
     <div>
