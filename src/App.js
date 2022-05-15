@@ -1,11 +1,12 @@
 // import logo from './logo.svg';
-import { useState } from "react";
-import { Col, Container, Row } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Alert, Col, Container, Row, Spinner } from "react-bootstrap";
 import "./App.css";
 import { AddForm } from "./components/form/AddForm";
 import { TaskList } from "./components/task-list/TaskList";
 import { BadList } from "./components/task-list/BadList";
 import { Title } from "./components/title/Title";
+import { fetchAllTasks, postTask } from "./helpers/axiosHelper";
 
 const weeklyHrs = 24 * 7;
 
@@ -16,11 +17,28 @@ const App = () => {
   // 5.2 Add the item in the bad list, we create a state for the bad list
   const [badList, setBadList] = useState([]);
 
+  //
+  const [response, setResponse] = useState({
+    status: "",
+    message: "",
+  });
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await fetchAllTasks();
+
+      result?.status === "success" && setTaskList(result.result);
+      console.log(result);
+    };
+    fetchData();
+  }, []);
+
   // 9. Alert when delete is clicked
 
   const deleteTask = () => {
     return window.confirm("Are you sure you want to delete this task?");
-  };
+  }; //We invoke this function in removeFromTaskList and removeFromBadList
 
   // 4. Remove item from the task list when the delete button is clicked
 
@@ -78,9 +96,22 @@ const App = () => {
 
   const ttlHrs = taskListTotalHr + badListTotalHr;
 
-  const addToTaskList = (newInfo) => {
+  // const addToTaskList = (newInfo) => {
+  //   if (ttlHrs + +newInfo.hr <= weeklyHrs) {
+  //     setTaskList([...taskList, newInfo]);
+  //   } else {
+  //     alert("You have exceeded the weekly limit of " + weeklyHrs + "hrs");
+  //   }
+  // };
+
+  // We comment the addToTaskList and will integrate it with our back end API
+  const addToTaskList = async (newInfo) => {
     if (ttlHrs + +newInfo.hr <= weeklyHrs) {
-      setTaskList([...taskList, newInfo]);
+      // Calling the API to send the data to the server
+      setIsLoading(true);
+      const result = await postTask(newInfo);
+      setResponse(true);
+      setIsLoading(false);
     } else {
       alert("You have exceeded the weekly limit of " + weeklyHrs + "hrs");
     }
@@ -93,6 +124,13 @@ const App = () => {
         {/* Title component */}
         <Title />
 
+        {isLoading && <Spinner animation="border" variant="primary" />}
+
+        {response?.message && (
+          <Alert variant={response.status === "success" ? "success" : "danger"}>
+            {response.message}
+          </Alert>
+        )}
         {/* Form component */}
         <AddForm addToTaskList={addToTaskList} />
 
